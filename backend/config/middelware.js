@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 
 const verifyToken = async (req, res, next) => {
   const authHeader = req.header("Authorization");
-  console.log(authHeader);
+  // console.log(req, "reeeeeeeee");
+  // console.log(authHeader, " tooooooooooooooooo");
 
   if (typeof authHeader === "undefined") {
     return res.status(400).json({
@@ -13,7 +14,7 @@ const verifyToken = async (req, res, next) => {
 
   let token = authHeader.split(" ");
   token = token[1];
-  console.log(token);
+  // console.log(token);
 
   jwt.verify(token, process.env.JWT_SECRET, async (err) => {
     if (err) {

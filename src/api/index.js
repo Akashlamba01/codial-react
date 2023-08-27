@@ -1,7 +1,7 @@
 import { API_URLS, getFormBody, LOCALSTORAGE_TOKEN_KEY } from "../utils";
 
 const customFetch = async (url, { body, ...customConfig }) => {
-  const token = window.localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+  const token = window.localStorage.getItem("access_token");
 
   const headers = {
     "content-type": "application/x-www-form-urlencoded",
@@ -75,5 +75,17 @@ export const editProfile = async (
   return customFetch(API_URLS.editUser(), {
     method: "POST",
     body: { email, password, confirmPassword, username },
+  });
+};
+
+export const userProfileInfo = async (userId) => {
+  return customFetch(API_URLS.userInfo(userId), {
+    method: "GET",
+  });
+};
+
+export const createFriend = async (userId) => {
+  return customFetch(API_URLS.createFriendship(userId), {
+    method: "POST",
   });
 };

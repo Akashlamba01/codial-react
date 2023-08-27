@@ -146,8 +146,87 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getUserDetails = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.userData.email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found!",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      data: user,
+      message: "User Created Successfully!",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+// const getUserDetails = async (req, res) => {
+//   console.log(req.userData, " uuuuuuuuuuuuuuuuuu");
+//   try {
+//     const user = await User.findById(req.userData._id);
+
+//     if (!user) {
+//       return res.status(400).json({
+//         message: "User not found!",
+//         success: false,
+//       });
+//     }
+
+//     return res.status(200).json({
+//       data: user,
+//       message: "Get User Successfully!",
+//       success: true,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(400).json({
+//       message: error.message,
+//       success: false,
+//     });
+//   }
+// };
+
+const getUserById = async (req, res) => {
+  try {
+    // console.log(req.params, " uuuuuuuuuuuuuuuuuu");
+
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found!",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      data: user,
+      message: "Get User Successfully!",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   updateUser,
+  getUserById,
+  getUserDetails,
 };

@@ -6,10 +6,14 @@ export const API_URLS = {
   login: () => `${API_ROOT}/users/login`,
   signup: () => `${API_ROOT}/users/register`,
   posts: (page, limit) => `${API_ROOT}/posts?page=${page}&limit=${limit}`,
-  createPost: (content) => `${API_ROOT}/posts/create`,
+  editUser: () => `${API_ROOT}/users/edit-profile`,
+  userInfo: (userId) => `${API_ROOT}/users/${userId}`,
+  // friends: () => `${API_ROOT}/friendship/friends`,
+  // getUser: () => `${API_ROOT}/users/getUser`,
   createFriendship: (userId) =>
-    `${API_ROOT}/friendship/create_friendship?user_id=${userId}`,
-  friends: () => `${API_ROOT}/friendship/fetch_user_friends`,
+    `${API_ROOT}/friendship/create-friendship?user_id=${userId}`,
+
+  createPost: (content) => `${API_ROOT}/posts/create`,
   removeFriend: (userId) =>
     `${API_ROOT}/friendship/remove_friendship?user_id=${userId}`,
   toggleLike: (itemId, itemType) =>
@@ -18,9 +22,7 @@ export const API_URLS = {
     `${API_ROOT}/likes?likeable_id=${itemId}&likeable_type=${itemType}`,
   comment: () => `${API_ROOT}/comments`, // POST - create, GET - list of comments
   deleteComment: (commentId) => `${API_ROOT}/comments?comment_id=${commentId}`,
-  editUser: () => `${API_ROOT}/users/edit-profile`,
-  userInfo: (userId) => `${API_ROOT}/users/${userId}`,
   searchUsers: (searchText) => `${API_ROOT}/users/search?text=${searchText}`,
 };
 
-export const LOCALSTORAGE_TOKEN_KEY = "__codeial_token__";
+export const LOCALSTORAGE_TOKEN = "access_token";

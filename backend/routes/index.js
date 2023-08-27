@@ -1,4 +1,5 @@
 const express = require("express");
+const { verifyToken } = require("../config/middelware");
 const router = express.Router();
 
 router.use("/users", require("./user"));

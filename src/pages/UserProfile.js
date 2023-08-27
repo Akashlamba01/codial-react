@@ -1,7 +1,47 @@
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import styles from "../styles/settings.module.css";
+import { useEffect, useState } from "react";
+import { Loader } from "../components";
+import { createFriend, userProfileInfo } from "../api";
+import { useAuth } from "../hooks";
 
 const UserProfile = () => {
-  const user = {};
+  const [user, setUser] = useState([]);
+  const [loading, setLoading] = useState([]);
+  const [requestInProgress, setrequestInProgress] = useState(false);
+  const { userId } = useParams();
+  const auth = useAuth();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await userProfileInfo(userId);
+      if (response.success) {
+        setUser(response.data);
+      }
+      setLoading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  const handleAddFriend = async () => {
+    setrequestInProgress(true);
+
+    const response = await createFriend(userId);
+    console.log(response);
+
+    if (response.success) {
+      let { from_user } = response.data;
+
+      auth.updateUserFriends(true, from_user);
+    }
+
+    setrequestInProgress(false);
+  };
 
   return (
     <div className={styles.settings}>
@@ -14,17 +54,22 @@ const UserProfile = () => {
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>Email</div>
-        <div className={styles.fieldValue}>{user?.email}</div>
+        <div className={styles.fieldValue}>{user.email}</div>
       </div>
 
       <div className={styles.field}>
         <div className={styles.fieldLabel}>Name</div>
-        <div className={styles.fieldValue}>{user?.username}</div>
+        <div className={styles.fieldValue}>{user.username}</div>
       </div>
 
       <div className={styles.btnGrp}>
-        <button className={`button ${styles.editBtn}`}>add friend</button>
         <button className={`button ${styles.editBtn}`}>remove friend</button>
+
+        <button
+          className={`button ${styles.editBtn}`}
+          onClick={handleAddFriend}>
+          add friend
+        </button>
       </div>
     </div>
   );
