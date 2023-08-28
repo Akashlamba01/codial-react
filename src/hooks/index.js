@@ -7,6 +7,7 @@ import {
   register,
   editProfile,
   userProfileInfo,
+  getFriends,
   fetchFriends,
   getUserById,
 } from "../api";
@@ -31,9 +32,18 @@ export const useProvideAuth = () => {
 
       if (userToken) {
         const user = jwt(userToken);
+        const response = await getFriends();
+
+        console.log(response.success);
+        let friends = [];
+
+        if (response.success) {
+          friends = response.data.friends;
+        }
 
         setUser({
           ...user,
+          friends,
         });
       }
 
@@ -130,16 +140,6 @@ export const useProvideAuth = () => {
     removeItemFromLocalStorage("access_token");
   };
 
-  const updateUserFriends = (addFriend, friend) => {
-    if (addFriend) {
-      setUser({
-        ...user,
-        friends: [...user.friends, friend],
-      });
-      return;
-    }
-  };
-
   return {
     user,
     login,
@@ -148,6 +148,6 @@ export const useProvideAuth = () => {
     signup,
     editUser,
     userInfo,
-    updateUserFriends,
+    // updateUserFriends,
   };
 };

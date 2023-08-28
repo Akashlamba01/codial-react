@@ -148,7 +148,11 @@ const updateUser = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.userData.email });
+    let user = await User.findOne({ email: req.userData.email })
+      .populate("friends", "-password -access_token -friends")
+      .select("-password");
+
+    // console.log(user);
 
     if (!user) {
       return res.status(400).json({
@@ -159,7 +163,7 @@ const getUserDetails = async (req, res) => {
 
     return res.status(200).json({
       data: user,
-      message: "User Created Successfully!",
+      message: "User Get Successfully!",
       success: true,
     });
   } catch (error) {

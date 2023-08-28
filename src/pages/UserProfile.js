@@ -28,20 +28,7 @@ const UserProfile = () => {
     return <Loader />;
   }
 
-  const handleAddFriend = async () => {
-    setrequestInProgress(true);
-
-    const response = await createFriend(userId);
-    console.log(response);
-
-    if (response.success) {
-      let { from_user } = response.data;
-
-      auth.updateUserFriends(true, from_user);
-    }
-
-    setrequestInProgress(false);
-  };
+  console.log(auth.user);
 
   return (
     <div className={styles.settings}>
@@ -67,7 +54,8 @@ const UserProfile = () => {
 
         <button
           className={`button ${styles.editBtn}`}
-          onClick={handleAddFriend}>
+          // onClick={handleAddFriend}
+        >
           add friend
         </button>
       </div>
