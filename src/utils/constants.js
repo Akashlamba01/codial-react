@@ -12,10 +12,10 @@ export const API_URLS = {
   getUser: () => `${API_ROOT}/users/getUser`,
   createFriendship: (userId) =>
     `${API_ROOT}/friendship/create-friendship?user_id=${userId}`,
+  removeFriendship: (userId) =>
+    `${API_ROOT}/friendship/remove-friendship?user_id=${userId}`,
 
   createPost: (content) => `${API_ROOT}/posts/create`,
-  removeFriend: (userId) =>
-    `${API_ROOT}/friendship/remove_friendship?user_id=${userId}`,
   toggleLike: (itemId, itemType) =>
     `${API_ROOT}/likes/toggle?likeable_id=${itemId}&likeable_type=${itemType}`, // itemType is 'Post'/'Comment'
   getLikes: (itemId, itemType) =>

@@ -2,13 +2,13 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import styles from "../styles/settings.module.css";
 import { useEffect, useState } from "react";
 import { Loader } from "../components";
-import { createFriend, userProfileInfo } from "../api";
+import { createFriend, removeFriend, userProfileInfo } from "../api";
 import { useAuth } from "../hooks";
 
 const UserProfile = () => {
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState([]);
-  const [requestInProgress, setrequestInProgress] = useState(false);
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const { userId } = useParams();
   const auth = useAuth();
 
@@ -30,6 +30,39 @@ const UserProfile = () => {
 
   console.log(auth.user);
 
+  const checkFriend = () => {};
+  checkFriend();
+
+  const handleAddFriend = async () => {
+    setRequestInProgress(true);
+
+    const response = await createFriend(userId);
+
+    if (response.success) {
+      auth.updateUserFriends(response.data.friends);
+      console.log("add friend success!");
+    } else {
+      console.log("Error to add friend!");
+    }
+
+    setRequestInProgress(false);
+  };
+
+  const handleRemoveFriend = async () => {
+    setRequestInProgress(true);
+
+    const response = await removeFriend(userId);
+
+    if (response.success) {
+      auth.updateUserFriends(response.data.friends);
+      console.log("remove frined!");
+    } else {
+      console.log("error to remove frined");
+    }
+
+    setRequestInProgress(false);
+  };
+
   return (
     <div className={styles.settings}>
       <div className={styles.imgContainer}>
@@ -50,12 +83,15 @@ const UserProfile = () => {
       </div>
 
       <div className={styles.btnGrp}>
-        <button className={`button ${styles.editBtn}`}>remove friend</button>
+        <button
+          className={`button ${styles.editBtn}`}
+          onClick={handleRemoveFriend}>
+          remove friend
+        </button>
 
         <button
           className={`button ${styles.editBtn}`}
-          // onClick={handleAddFriend}
-        >
+          onClick={handleAddFriend}>
           add friend
         </button>
       </div>

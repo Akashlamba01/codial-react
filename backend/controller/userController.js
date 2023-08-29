@@ -149,10 +149,10 @@ const updateUser = async (req, res) => {
 const getUserDetails = async (req, res) => {
   try {
     let user = await User.findOne({ email: req.userData.email })
-      .populate("friends", "-password -access_token -friends")
+      .populate("friends", "username email _id")
       .select("-password");
 
-    // console.log(user);
+    console.log(user);
 
     if (!user) {
       return res.status(400).json({

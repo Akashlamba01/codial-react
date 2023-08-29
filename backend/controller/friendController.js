@@ -1,7 +1,7 @@
 const Friendship = require("../models/friendship");
 const User = require("../models/user");
 
-const addFriend = async (req, res) => {
+const addFriends = async (req, res) => {
   try {
     if (req.userData.id == req.params.id) {
       return res.status(402).json({
@@ -69,30 +69,66 @@ const addFriend = async (req, res) => {
   }
 };
 
-const friendToggle = async (req, res) => {
+const addFriend = async (req, res) => {
   try {
-    console.log(req.query.user_id);
-    let user = await User.findById(req.userData.id);
-    let isFriend = await Friendship.findOne({ to_user: req.query.user_id });
+    // console.log(req.query.user_id);
+    let user = await User.findById(req.userData._id);
 
-    if (isFriend) {
-      user.friends.pull(req.query.user_id);
+    let isFriend = await Friendship.findOne({
+      $or: [{ to_user: req.query.user_id }, { from_user: req.query.user_id }],
+    });
+
+    // console.log(isFriend);
+
+    if (!isFriend) {
+      let friend = await Friendship.create({
+        to_user: req.userData.id,
+        from_user: req.query.user_id,
+      });
+
+      user.friends.push(req.query.user_id);
       user.save();
 
-      isFriend.deleteOne();
-
       return res.status(200).json({
-        message: "Remove Friend!",
+        message: "Make Friends Successfully!",
         success: true,
+        data: user,
       });
     }
 
-    let friend = await Friendship.create({
-      to_user: req.userData.id,
-      from_user: req.query.user_id,
+    return res.status(400).json({
+      message: "Allready Friend!",
+      success: false,
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(505).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+const removeFriend = async (req, res) => {
+  try {
+    // console.log(req.query.user_id);
+    let user = await User.findById(req.userData._id);
+
+    let isFriend = await Friendship.findOne({
+      $or: [{ to_user: req.query.user_id }, { from_user: req.query.user_id }],
     });
 
-    user.friends.push(req.query.user_id);
+    if (!isFriend) {
+      return res.status(400).json({
+        message: "Not Friend!",
+        success: false,
+      });
+    }
+
+    isFriend.deleteOne();
+
+    user.friends.pull(req.query.user_id);
     user.save();
 
     return res.status(200).json({
@@ -109,34 +145,28 @@ const friendToggle = async (req, res) => {
   }
 };
 
-const getFriend = async (req, res) => {
-  try {
-    let friends = await Friendship.find({ to_user: req.userData._id });
-    console.log(friends);
+// const getFriend = async (req, res) => {
+//   try {
+//     let friends = await Friendship.find({ to_user: req.userData._id });
+//     console.log(friends);
 
-    if (!friends) {
-      return res.status(400).json({
-        message: "No friends!",
-        success: false,
-      });
-    }
-
-    return res.status(200).json({
-      message: "Get Friend Successfully!",
-      success: true,
-      data: friends,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(505).json({
-      message: error.message,
-      success: false,
-    });
-  }
-};
+//     return res.status(200).json({
+//       message: "Get Friend Successfully!",
+//       success: true,
+//       data: friends,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(505).json({
+//       message: error.message,
+//       success: false,
+//     });
+//   }
+// };
 
 module.exports = {
   addFriend,
-  friendToggle,
-  getFriend,
+  removeFriend,
+  // friendToggle,
+  // getFriend,
 };

@@ -140,6 +140,13 @@ export const useProvideAuth = () => {
     removeItemFromLocalStorage("access_token");
   };
 
+  const updateUserFriends = (friend) => {
+    setUser({
+      ...user,
+      friends: friend,
+    });
+  };
+
   return {
     user,
     login,
@@ -148,6 +155,6 @@ export const useProvideAuth = () => {
     signup,
     editUser,
     userInfo,
-    // updateUserFriends,
+    updateUserFriends,
   };
 };

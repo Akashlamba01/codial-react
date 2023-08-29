@@ -90,6 +90,12 @@ export const createFriend = async (userId) => {
   });
 };
 
+export const removeFriend = async (userId) => {
+  return customFetch(API_URLS.removeFriendship(userId), {
+    method: "POST",
+  });
+};
+
 export const getFriends = async () => {
   return customFetch(API_URLS.getUser(), {
     method: "GET",
